@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <div id="login-form">
+      <input id="username" type="text" name="username" value="">
+      <button id="login" type="button">log in</button>
+    </div>
+
+    <div id="secret-content">
+      Hey <span id="greeting"></span>!
+    </div>
+
+    <script type="text/javascript">
+      var secretContent = document.getElementById('secret-content')
+      var loginForm = document.getElementById('login-form')
+      var usernameInput = document.getElementById('username')
+      var loginButton = document.getElementById('login')
+      var greeting = document.getElementById('greeting')
+
+      loginButton.addEventListener('click', handleClick)
+
+      secretContent.style.display = 'none'
+
+      if (getUser()) {
+        showContent(getUser().username)
+      }
+
+      function handleClick() {
+        var username = usernameInput.value
+        var loginRequest = new XMLHttpRequest()
+        loginRequest.open('POST', 'http://localhost:8888/login', true)
+        loginRequest.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        var data = {
+          username: username
+        }
+        loginRequest.onload = function() {
+          var jwt = loginRequest.responseText
+          localStorage.token = jwt
+
+          showContent()
+        }
+        loginRequest.onerror = function() {
+          console.log(loginRequest);
+        }
+        loginRequest.send(JSON.stringify(data));
+      }
+
+      function showContent(name) {
+        loginForm.style.display = 'none';
+        secretContent.style.display = 'block';
+        greeting.textContent = name
+      }
+
+      function getUser() {
+        if (localStorage.token) {
+          var decodedToken = JSON.parse(atob(localStorage.token.split('.')[1]))
+          if (decodedToken) return decodedToken
+        }
+      }
+    </script>
+  </body>
+</html>
