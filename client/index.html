@@ -23,7 +23,7 @@
       var logoutButton = document.getElementById('logout')
       var greeting = document.getElementById('greeting')
 
-      loginButton.addEventListener('click', handleClick)
+      loginButton.addEventListener('click', handleLoginClick)
       logoutButton.addEventListener('click', handleLogoutClick)
 
       secretContent.style.display = 'none'
@@ -32,7 +32,7 @@
         showContent(getUser().username)
       }
 
-      function handleClick() {
+      function handleLoginClick() {
         var username = usernameInput.value
         var loginRequest = new XMLHttpRequest()
         loginRequest.open('POST', 'http://localhost:8888/login', true)
@@ -53,7 +53,6 @@
       }
 
       function handleLogoutClick() {
-        console.log('click');
         localStorage.token = ''
         hideContent()
       }
