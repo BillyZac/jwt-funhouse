@@ -11,7 +11,8 @@
     </div>
 
     <div id="secret-content">
-      Hey <span id="greeting"></span>!
+      <div>Hey <span id="greeting"></span>!</div>
+      <button id="logout" type="button">log out</button>
     </div>
 
     <script type="text/javascript">
@@ -19,9 +20,11 @@
       var loginForm = document.getElementById('login-form')
       var usernameInput = document.getElementById('username')
       var loginButton = document.getElementById('login')
+      var logoutButton = document.getElementById('logout')
       var greeting = document.getElementById('greeting')
 
       loginButton.addEventListener('click', handleClick)
+      logoutButton.addEventListener('click', handleLogoutClick)
 
       secretContent.style.display = 'none'
 
@@ -40,19 +43,31 @@
         loginRequest.onload = function() {
           var jwt = loginRequest.responseText
           localStorage.token = jwt
-
-          showContent()
+          var name = getUser().username
+          showContent(name)
         }
         loginRequest.onerror = function() {
-          console.log(loginRequest);
+          console.log('Oh no!');
         }
         loginRequest.send(JSON.stringify(data));
+      }
+
+      function handleLogoutClick() {
+        console.log('click');
+        localStorage.token = ''
+        hideContent()
       }
 
       function showContent(name) {
         loginForm.style.display = 'none';
         secretContent.style.display = 'block';
         greeting.textContent = name
+      }
+
+      function hideContent() {
+        loginForm.style.display = 'block';
+        secretContent.style.display = 'none';
+        greeting.textContent = ''
       }
 
       function getUser() {
